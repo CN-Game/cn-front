@@ -1,12 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { Route, BrowserRouter as Router } from 'react-router-dom'
+import Game from './components/Game'
+import WaitingRoom from './components/WaitingRoom';
+import GlobalStyle from './theme/globalStyle';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const Routing = () => {
+  return (
+    <>
+      <GlobalStyle />
+      <Router>
+        <Route exact path="/" component={App} />
+        <Route path="/waiting-room/:id">
+          <WaitingRoom />
+        </Route>
+        <Route path="/game/:id" children={<Game />} />
+        {/*<Route path="/contact" component={Contact} />*/}
+      </Router>
+    </>
+  )
+}
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+ReactDOM.render(<Routing />, document.getElementById('root'));
