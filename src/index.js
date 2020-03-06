@@ -16,7 +16,6 @@ const Routing = () => {
           <WaitingRoom />
         </Route>
         <Route path="/game/:id" children={<Game />} />
-        {/*<Route path="/contact" component={Contact} />*/}
       </Router>
     </>
   )
