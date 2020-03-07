@@ -1,22 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import Board from "../Board";
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
+import Board from "../Board";
 
-const Game = () => {
-    const [board, setBoard] = useState([]);
+const Game = function (props) {
+
+    const [board, setBoard] = useState(props.location.state.board);
+    const [socket, setSocket] = useState(props.location.state.socket);
 
     const { id } = useParams();
 
-    useEffect((id) => {
-        const getBoard = async () => {
-            const res = await axios.get(`http://localhost:3001/api/games/${id}`);
-
-            setBoard(res.data.board);
-        };
-
-        getBoard();
-
+    useEffect( () => {
+        socket.emit('GAME_BEGIN');
     }, []);
 
     console.log(board);
