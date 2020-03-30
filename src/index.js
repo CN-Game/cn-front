@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import Home from './components/Home';
 import { Route, HashRouter as Router, Switch } from 'react-router-dom'
 import Game from './components/Game'
 import WaitingRoom from './components/WaitingRoom';
@@ -12,7 +12,7 @@ const Routing = () => {
       <GlobalStyle />
       <Router>
         <Switch>
-          <Route exact path="/" component={App} />
+          <Route exact path="/" component={Home} />
           <Route path="/waiting-room/:id">
             <WaitingRoom />
           </Route>
@@ -21,6 +21,6 @@ const Routing = () => {
       </Router>
     </>
   )
-}
+};
 
 ReactDOM.render(<Routing />, document.getElementById('root'));
