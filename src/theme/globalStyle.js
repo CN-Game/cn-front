@@ -8,8 +8,18 @@ const GlobalStyle = createGlobalStyle`
     src: local('Riffic Free Bold'), url('../../public/RifficFree-Bold.woff') format('woff');
   }
   
-  body {
+  * {
     font-family: 'Riffic', sans-serif;
+  }
+  
+  body {
+    //background-color: #F2F2F2;
+    background-color: #E0E5EC;
+    margin: 0;
+  }
+  
+  button {
+    border: none;
   }
 `;
 
