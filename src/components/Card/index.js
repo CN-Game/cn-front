@@ -4,20 +4,17 @@ import {
 } from './styled'
 
 const Card = ({
-  color = '#EFEFD0',
-  text,
-  rotate,
-  className= '',
-  reveal = false,
-  realColor,
+    color = '#EFEFD0',
+    text,
+    rotate,
+    className= '',
+    reveal = false,
+    realColor,
+    discovered,
+    clickable,
 }) => {
 
-  if (reveal) {
-    color = realColor;
-  }
-
   const [clicked, setClicked] = useState(false);
-  const [discovered, setDiscovered] = useState(false);
 
   const onClick = () => {
     setClicked(!clicked);
@@ -30,7 +27,10 @@ const Card = ({
       rotate={rotate}
       clicked={clicked}
       discovered={discovered}
+      reveal={reveal}
+      realColor={realColor}
       onClick={onClick}
+      clickable={clickable}
     >
         {text}
     </StyledCardItem>
