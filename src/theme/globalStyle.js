@@ -18,6 +18,10 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
   }
   
+  p {
+    margin: 0;
+  }
+  
   button {
     border: none;
   }
