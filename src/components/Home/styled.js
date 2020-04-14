@@ -10,7 +10,7 @@ export const MainContainer = styled.div`
 export const StyledTopCard = styled.div`
   background-color: ${color.neutral};
   text-align: center;
-  padding: 12px 16px;
+  padding: 16px;
   border-radius: 8px;
   box-shadow: 0 4px 10px #000000;
   transform: rotate(-3.21deg);

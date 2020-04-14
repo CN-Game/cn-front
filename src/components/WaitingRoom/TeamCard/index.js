@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyledTeamWrapper, StyledTeamContainer, StyledTitle, StyledRoleTitle } from './styled';
 import { StyledPseudoWrapper, StyledPseudo } from '../styled';
-import Button from '../../Button';
 
 const TeamCard = ({
     team,

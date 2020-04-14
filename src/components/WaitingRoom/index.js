@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import io from "socket.io-client"
 import Button from '../Button';
 import Input from '../Input';
@@ -11,6 +11,10 @@ import {
     StyledTitlePseudo,
     StyledPseudo,
     StyledPseudoWrapper,
+    StyledId,
+    StyledChoosePseudo,
+    StyledCenterColumn,
+    StyledButton,
 } from './styled';
 
 const WaitingRoom = () => {
@@ -79,15 +83,6 @@ const WaitingRoom = () => {
 
     return (
       <>
-          <h1>Waiting Room - {id}</h1>
-          {!selectTeam ? (
-            <section>
-                <label htmlFor='pseudo'>Your pseudo</label>
-                <Input onChange={handleChange} value={pseudo} name="pseudo" type="text" />
-                <Button onClick={handlePseudo} text={'GO'} />
-            </section>
-          ) : (
-          <>
             <WaitingRoomContainer>
                 <TeamCard
                     team={"Blue"}
@@ -95,14 +90,32 @@ const WaitingRoom = () => {
                     onClickAgent={() => handleChoiceTeam({role: 'BA', team: 'blue'})}
                     players={players.filter(player => player.team === "blue")}
                 />
-                <PseudoContainer>
-                    <StyledTitlePseudo>Choose your team</StyledTitlePseudo>
-                    <StyledPseudoWrapper>
-                        {players.map(player => (
-                            !player.role && <StyledPseudo>{player.pseudo}</StyledPseudo>
-                        ))}
-                    </StyledPseudoWrapper>
-                </PseudoContainer>
+                <StyledCenterColumn>
+                    <StyledId>
+                        <p>{id}</p>
+                    </StyledId>
+
+                    {!selectTeam ? (
+                        <StyledChoosePseudo>
+                            <label htmlFor='pseudo'>Peudo</label>
+                            <Input onChange={handleChange} value={pseudo} name="pseudo" type="text" />
+                            <Button onClick={handlePseudo} text={'Use this pseudo'} />
+                        </StyledChoosePseudo>
+                    ) : (
+                        <>
+                            <PseudoContainer>
+                                <StyledTitlePseudo>Choose your team</StyledTitlePseudo>
+                                <StyledPseudoWrapper>
+                                    {players.map(player => (
+                                        !player.role && <StyledPseudo>{player.pseudo}</StyledPseudo>
+                                    ))}
+                                </StyledPseudoWrapper>
+                            </PseudoContainer>
+                            <StyledButton text={'Launch Game'} onClick={() => socket.emit('GAME_BEGIN')} />
+                        </>
+                    )}
+
+                </StyledCenterColumn>
                 <TeamCard
                     team={"Red"}
                     onClickSpy={() => handleChoiceTeam( { role: 'RS', team: 'red' })}
@@ -110,9 +123,6 @@ const WaitingRoom = () => {
                     players={players.filter(player => player.team === "red")}
                 />
             </WaitingRoomContainer>
-            <Button text={'Launch Game'} onClick={() => socket.emit('GAME_BEGIN')} />
-          </>
-          )}
       </>
     );
 };

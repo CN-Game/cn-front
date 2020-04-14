@@ -1,10 +1,11 @@
-import styled from 'styled-components';
+import styled  from 'styled-components';
 import { color } from '../../../utils/branding';
 
 const StyledTeamWrapper = styled.section`
   width: 33%;
   text-align: center;
   align-items: center;
+  margin-top: 12px;
 `;
 
 const StyledTitle = styled.h3`
