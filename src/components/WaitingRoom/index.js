@@ -29,7 +29,7 @@ const WaitingRoom = () => {
     const { id } = useParams();
 
     useEffect(() => {
-        setSocket(io('http://localhost:3001', {query: 'room=' + id}));
+        setSocket(io(process.env.REACT_APP_SOCKET_URL, {query: 'room=' + id}));
 
     }, []);
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyledBoard } from './styled'
 import Card from '../../Card'
 
-const Board = ({data, player}) => {
+const Board = ({data, player, selectCards}) => {
 
     const [reveal, setReveal] = useState();
     const [clickable, setClickable] = useState();
@@ -16,12 +16,14 @@ const Board = ({data, player}) => {
         <StyledBoard>
             {data.map( item => (
                 <Card
-                    key={item.word}
-                    text={item.word}
+                    key={item['_id']}
+                    item={item}
                     reveal={reveal}
                     realColor={item.color}
                     discovered={item.discovered}
+                    word={item.word}
                     clickable={clickable}
+                    selectCard={selectCards}
                 />
             ))}
         </StyledBoard>

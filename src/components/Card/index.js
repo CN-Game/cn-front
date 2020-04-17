@@ -10,14 +10,19 @@ const Card = ({
     className= '',
     reveal = false,
     realColor,
-    discovered,
     clickable,
+    selectCard,
+    item,
+    discovered,
+    word
 }) => {
 
   const [clicked, setClicked] = useState(false);
+  // const { word, discovered, _id} = item;
 
   const onClick = () => {
     setClicked(!clicked);
+    // selectCard({_id, word});
   };
 
   return (
@@ -32,7 +37,7 @@ const Card = ({
       onClick={onClick}
       clickable={clickable}
     >
-        {text}
+        {word}
     </StyledCardItem>
   )
 }

@@ -14,8 +14,7 @@ const Game = function (props) {
     const [turn, setTurn] = useState('BS');
     const [wordUsed, setWordUsed] = useState();
     const [numberWord, setNumberWord] = useState('');
-    const [options, setOptions] = useState([]);
-    const [nbrSelect, setNbrSelect] = useState([]);
+    const [cardsSelected, setCardsSelected] = useState([]);
 
     const { id } = useParams();
 
@@ -25,14 +24,14 @@ const Game = function (props) {
         switch (currentPlayer.role) {
             case 'BS':
             case 'RS':
-                socket.emit('NEXT_TURN', {wordUsed, number, turn})
+                socket.emit('NEXT_TURN', {wordUsed, number, turn});
                 break;
         }
     };
 
     const nrbButton = [];
-    const optionsRender = [];
-    // let nbrSelect = [];
+    // const optionsRender = [];
+    // // let nbrSelect = [];
 
     for (let i = 1; i <= cardRemain; i++) {
         nrbButton.push(<Button key={i} text={i} onClick={() => nextTurn(i, 'BA')} />);
@@ -62,20 +61,22 @@ const Game = function (props) {
         setWordUsed(data.wordUsed);
         setNumberWord(data.number);
 
-        if (data.turn === 'BA' || data.turn === 'RA') getOption(data.number);
+        if (data.turn === 'BA' || data.turn === 'RA') {
+            setCardsSelected([]);
+        }
     });
 
-    const getOption = (number) => {
-        board.forEach( (card, index) => {
-            optionsRender.push(<option key={index} value={card.word}>{card.word}</option>)
-        });
-
-        console.log(number)
-        setNbrSelect(new Array(number).fill(''))
-        console.log(nbrSelect)
-
-        setOptions(optionsRender)
+    const selectCards = (card) => {
+        console.log(cardsSelected);
+        if ((turn === 'BA' && currentPlayer.role === 'BA') || (turn === 'BA' && currentPlayer.role === 'BA')) {
+            if (cardsSelected.some(item => item._id === card._id)) {
+                setCardsSelected(cardsSelected.filter(item => item._id !== card._id))
+            } else {
+                setCardsSelected([...cardsSelected, card]);
+            }
+        }
     };
+
 
     return (
         <>
@@ -92,21 +93,22 @@ const Game = function (props) {
             )}
 
             {/* Agent turn */}
-            {turn === 'BA' && currentPlayer.role === 'BA' &&(
+            {((turn === 'BA' && currentPlayer.role === 'BA') || (turn === 'RA' && currentPlayer.role === 'RA')) &&(
               <div>
                   <p>{wordUsed}</p>
                   <p>{numberWord}</p>
 
-                  {nbrSelect.map( () => (
-                      <select name="" id="">{options}</select>
+                  {cardsSelected.map( (card) => (
+                      <p>{card.word}</p>
                   ))}
+
                   <Button onClick={nextTurn} text='Valider' />
               </div>
             )}
 
             {/* Next team */}
 
-            <Board data={board} player={currentPlayer}/>
+            <Board data={board} player={currentPlayer} selectCards={selectCards}/>
         </>
     )
 
