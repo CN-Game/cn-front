@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     StyledCardItem
 } from './styled'
@@ -14,16 +14,35 @@ const Card = ({
     selectCard,
     item,
     discovered,
-    word
+    word,
+    socket,
+    turn,
+    player
 }) => {
 
   const [clicked, setClicked] = useState(false);
-  // const { word, discovered, _id} = item;
+  const [cardsSelected, setCardsSelected] = useState([]);
 
   const onClick = () => {
-    setClicked(!clicked);
-    // selectCard({_id, word});
+      if ((turn === 'BA' && player.role === 'BA') || (turn === 'RA' && player.role === 'RA')) {
+          socket.emit('SELECT_CARD', {item, turn, player});
+      }
   };
+
+  if (socket) {
+      socket.on('CARDS_SELECT_UPDATE', async (data) => {
+          await setCardsSelected(data);
+      });
+  }
+
+  useEffect( () => {
+      setClicked(
+          cardsSelected.some(function (card) {
+            return card._id === item._id;
+          })
+      )
+    }
+  , [cardsSelected]);
 
   return (
     <StyledCardItem

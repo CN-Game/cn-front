@@ -15,75 +15,78 @@ const Game = function (props) {
     const [wordUsed, setWordUsed] = useState();
     const [numberWord, setNumberWord] = useState('');
     const [cardsSelected, setCardsSelected] = useState([]);
+    const [toNextTurn, setToNextTurn] = useState('');
 
     const { id } = useParams();
 
     let cardRemain = 7; // TODO: get data from server
 
-    const nextTurn = (number, turn) => {
+    const nextTurn = (number = 0) => {
         switch (currentPlayer.role) {
             case 'BS':
             case 'RS':
-                socket.emit('NEXT_TURN', {wordUsed, number, turn});
+                socket.emit('NEXT_TURN', {wordUsed, number, toNextTurn});
+                break;
+            case 'BA':
+            case 'RA':
+                socket.emit('NEXT_TURN', {toNextTurn});
                 break;
         }
     };
 
     const nrbButton = [];
-    // const optionsRender = [];
-    // // let nbrSelect = [];
 
     for (let i = 1; i <= cardRemain; i++) {
-        nrbButton.push(<Button key={i} text={i} onClick={() => nextTurn(i, 'BA')} />);
+        nrbButton.push(<Button key={i} text={i} onClick={() => nextTurn(i)} />);
     }
 
     useEffect( () => {
         async function getGame() {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/games/${id}`);
-            setBoard(res.data.board);
-
             res.data.players.forEach(player => {
                 if(player.socketId === socket.id) {
+                    console.log(player.role);
                     setCurrentPlayer(player)
+                    switch (player.role) {
+                        case 'BS':
+                            setToNextTurn('BA');
+                            break;
+                        case 'RS':
+                            setToNextTurn('RA');
+                            break;
+                        case 'BA':
+                            setToNextTurn('RS');
+                            break;
+                        case 'RA':
+                            setToNextTurn('BS');
+                            break;
+                    }
                 }
-            })
+            });
+
+            setBoard(res.data.board);
         }
 
         getGame();
+
+        socket.on('NEXT_TURN', (data) => {
+            setTurn(data.toNextTurn);
+            setWordUsed(data.wordUsed);
+            setNumberWord(data.number);
+        });
+
     }, []);
 
     const handleChange = (e) => {
         setWordUsed(e.target.value);
     };
 
-    socket.on('NEXT_TURN', (data) => {
-        setTurn(data.turn);
-        setWordUsed(data.wordUsed);
-        setNumberWord(data.number);
-
-        if (data.turn === 'BA' || data.turn === 'RA') {
-            setCardsSelected([]);
-        }
-    });
-
-    const selectCards = (card) => {
-        console.log(cardsSelected);
-        if ((turn === 'BA' && currentPlayer.role === 'BA') || (turn === 'BA' && currentPlayer.role === 'BA')) {
-            if (cardsSelected.some(item => item._id === card._id)) {
-                setCardsSelected(cardsSelected.filter(item => item._id !== card._id))
-            } else {
-                setCardsSelected([...cardsSelected, card]);
-            }
-        }
-    };
-
-
     return (
         <>
             <h1>Game {id}</h1>
 
              {/*Spy turn*/}
-            {currentPlayer.role === 'BS' && turn === 'BS' && (
+            {((currentPlayer.role === 'BS' && turn === 'BS') || (currentPlayer.role === 'RS' && turn === 'RS')) && (
                 <StyledSpyTurn>
                     <Input onChange={handleChange}>{wordUsed}</Input>
                     <StyledButtonWrapper>
@@ -108,7 +111,7 @@ const Game = function (props) {
 
             {/* Next team */}
 
-            <Board data={board} player={currentPlayer} selectCards={selectCards}/>
+            <Board data={board} player={currentPlayer} socket={socket} turn={turn}/>
         </>
     )
 

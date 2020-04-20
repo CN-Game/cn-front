@@ -2,32 +2,36 @@ import React, { useEffect, useState } from 'react';
 import { StyledBoard } from './styled'
 import Card from '../../Card'
 
-const Board = ({data, player, selectCards}) => {
+class Board extends React.Component {
+    constructor(props){
+        super(props);
+    }
 
-    const [reveal, setReveal] = useState();
-    const [clickable, setClickable] = useState();
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        this.reveal = this.props.player.role === 'BS' || this.props.player.role === 'RS';
+        this.clickable = this.props.player.role === 'BA' || this.props.player.role === 'RA';
+    }
 
-    useEffect(function () {
-        setReveal(player.role === 'BS' || player.role === 'RS')
-        setClickable(player.role === 'BA' || player.role === 'RA')
-    });
-
-    return (
-        <StyledBoard>
-            {data.map( item => (
-                <Card
-                    key={item['_id']}
-                    item={item}
-                    reveal={reveal}
-                    realColor={item.color}
-                    discovered={item.discovered}
-                    word={item.word}
-                    clickable={clickable}
-                    selectCard={selectCards}
-                />
-            ))}
-        </StyledBoard>
-    )
+    render() {
+        return (
+            <StyledBoard>
+                {this.props.data.map( item => (
+                    <Card
+                        key={item['_id']}
+                        item={item}
+                        reveal={this.reveal}
+                        realColor={item.color}
+                        discovered={item.discovered}
+                        word={item.word}
+                        clickable={this.clickable}
+                        socket={this.props.socket}
+                        turn={this.props.turn}
+                        player={this.props.player}
+                    />
+                ))}
+            </StyledBoard>
+        )
+    }
 }
 
 export default Board

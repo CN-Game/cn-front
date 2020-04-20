@@ -17,33 +17,33 @@ import { color } from '../../utils/branding';
 
 const Home = () => {
 
-  const [idGame, setIdGame] = useState('')
-  const history = useHistory()
+  const [idGame, setIdGame] = useState('');
+  const history = useHistory();
 
   const handleChangeId = async (e) => {
     setIdGame(e.target.value)
-  }
+  };
 
   const createGame = async () => {
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/games`)
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/games`);
 
     history.push(`/waiting-room/${res.data.gameId}`)
-  }
+  };
 
   const joinGame = () => {
     history.push(`/waiting-room/${idGame}`)
-  }
+  };
 
   const enterPress = (e) => {
     const key = e.keyCode || e.which;
     if (key === 13) (
       joinGame()
     )
-  }
+  };
 
     return (
       <MainContainer>
-          <StyledTopLeftCard color={color.red} rotate={-21} text={'Voiture'} />
+          <StyledTopLeftCard color={color.red} rotate={-21} word={'Voiture'} />
           <StyledTopCard>
             <StyledTopText>
               <h1>Code Names</h1>
@@ -52,7 +52,7 @@ const Home = () => {
               </p>
             </StyledTopText>
           </StyledTopCard>
-          <StyledTopRightCard color={color.blue}rotate={26} text={'Obstacle'} discovered={false} />
+          <StyledTopRightCard color={color.blue}rotate={26} word={'Obstacle'} discovered={false} />
 
         <StyledActionContainer>
           <StyledJoinGame>
@@ -67,6 +67,6 @@ const Home = () => {
 
       </MainContainer>
     )
-}
+};
 
 export default Home;
