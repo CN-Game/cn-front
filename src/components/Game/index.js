@@ -18,6 +18,8 @@ const Game = function (props) {
     const [toNextTurn, setToNextTurn] = useState('');
     const [blueScore, setBlueScore] = useState(0);
     const [redScore, setRedScore] = useState(0);
+    const [finished, setFinished] = useState(false);
+    const [winner, setWinner] = useState('');
 
     const { id } = useParams();
 
@@ -47,7 +49,6 @@ const Game = function (props) {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/games/${id}`);
             res.data.players.forEach(player => {
                 if(player.socketId === socket.id) {
-                    console.log(player.role);
                     setCurrentPlayer(player)
                     switch (player.role) {
                         case 'BS':
@@ -65,6 +66,8 @@ const Game = function (props) {
                     }
                 }
             });
+            setFinished(res.data.finished);
+            setWinner(res.data.winner);
             setBlueScore(res.data.blueScore);
             setRedScore(res.data.redScore);
             setTurn(res.data.turn);
@@ -92,33 +95,34 @@ const Game = function (props) {
                 <li>Blue points: {blueScore}</li>
                 <li>Red points: {redScore}</li>
             </ul>
-             {/*Spy turn*/}
+            { finished && <div>Winner : {winner} Team</div>}
+
             {((currentPlayer.role === 'BS' && turn === 'BS') || (currentPlayer.role === 'RS' && turn === 'RS')) && (
                 <StyledSpyTurn>
-                    <Input onChange={handleChange}>{wordUsed}</Input>
-                    <StyledButtonWrapper>
-                        {nrbButton}
-                    </StyledButtonWrapper>
+                <Input onChange={handleChange}>{wordUsed}</Input>
+                <StyledButtonWrapper>
+                {nrbButton}
+                </StyledButtonWrapper>
                 </StyledSpyTurn>
-            )}
+                )}
 
             {/* Agent turn */}
             {((turn === 'BA' && currentPlayer.role === 'BA') || (turn === 'RA' && currentPlayer.role === 'RA')) &&(
-              <div>
-                  <p>{wordUsed}</p>
-                  <p>{numberWord}</p>
+                <div>
+                <p>{wordUsed}</p>
+                <p>{numberWord}</p>
 
-                  {cardsSelected.map( (card) => (
-                      <p>{card.word}</p>
-                  ))}
+                {cardsSelected.map((card) => (
+                    <p>{card.word}</p>
+                ))}
 
-                  <Button onClick={nextTurn} text='Valider' />
-              </div>
-            )}
+                <Button onClick={nextTurn} text='Valider' />
+                </div>
+                )}
 
             {/* Next team */}
 
-            <Board data={board} player={currentPlayer} socket={socket} turn={turn}/>
+                <Board data={board} player={currentPlayer} socket={socket} turn={turn}/>
         </>
     )
 
