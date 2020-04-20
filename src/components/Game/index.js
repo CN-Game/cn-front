@@ -11,11 +11,13 @@ const Game = function (props) {
     const [board, setBoard] = useState([]);
     const [socket, setSocket] = useState(props.location.state.socket || {});
     const [currentPlayer, setCurrentPlayer] = useState({});
-    const [turn, setTurn] = useState('BS');
+    const [turn, setTurn] = useState('');
     const [wordUsed, setWordUsed] = useState();
     const [numberWord, setNumberWord] = useState('');
     const [cardsSelected, setCardsSelected] = useState([]);
     const [toNextTurn, setToNextTurn] = useState('');
+    const [blueScore, setBlueScore] = useState(0);
+    const [redScore, setRedScore] = useState(0);
 
     const { id } = useParams();
 
@@ -63,7 +65,9 @@ const Game = function (props) {
                     }
                 }
             });
-
+            setBlueScore(res.data.blueScore);
+            setRedScore(res.data.redScore);
+            setTurn(res.data.turn);
             setBoard(res.data.board);
         }
 
@@ -75,7 +79,7 @@ const Game = function (props) {
             setNumberWord(data.number);
         });
 
-    }, []);
+    }, [turn]);
 
     const handleChange = (e) => {
         setWordUsed(e.target.value);
@@ -84,7 +88,10 @@ const Game = function (props) {
     return (
         <>
             <h1>Game {id}</h1>
-
+            <ul>
+                <li>Blue points: {blueScore}</li>
+                <li>Red points: {redScore}</li>
+            </ul>
              {/*Spy turn*/}
             {((currentPlayer.role === 'BS' && turn === 'BS') || (currentPlayer.role === 'RS' && turn === 'RS')) && (
                 <StyledSpyTurn>
