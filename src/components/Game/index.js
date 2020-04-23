@@ -3,8 +3,23 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import Board from "./Board";
 import Input from '../Input';
-import Button from '../Button';
-import { StyledSpyTurn, StyledButtonWrapper } from './styled';
+import {
+    StyledContainer,
+    StyledSpyTurn,
+    StyledButtonWrapper,
+    StyledNumberButton,
+    StyledId,
+    StyledBlueScoreWrapper,
+    StyledRedScoreWrapper,
+    StyledBlueScore,
+    StyledBlueTotalScore,
+    StyledRedScore,
+    StyledRedTotalScore,
+    StyledLabel,
+    StyledTip,
+    StyledTextTip,
+    StyledValidationButton,
+} from './styled';
 
 const Game = function (props) {
 
@@ -14,7 +29,6 @@ const Game = function (props) {
     const [turn, setTurn] = useState('');
     const [wordUsed, setWordUsed] = useState();
     const [numberWord, setNumberWord] = useState('');
-    const [cardsSelected, setCardsSelected] = useState([]);
     const [toNextTurn, setToNextTurn] = useState('');
     const [blueScore, setBlueScore] = useState(0);
     const [redScore, setRedScore] = useState(0);
@@ -41,7 +55,7 @@ const Game = function (props) {
     const nrbButton = [];
 
     for (let i = 1; i <= cardRemain; i++) {
-        nrbButton.push(<Button key={i} text={i} onClick={() => nextTurn(i)} />);
+        nrbButton.push(<StyledNumberButton key={i} text={i} onClick={() => nextTurn(i)} />);
     }
 
     useEffect( () => {
@@ -90,36 +104,41 @@ const Game = function (props) {
 
     return (
         <>
-            <h1>Game {id}</h1>
-            <ul>
-                <li>Blue points: {blueScore}</li>
-                <li>Red points: {redScore}</li>
-            </ul>
+            <StyledBlueScoreWrapper>
+                <StyledBlueScore>{blueScore}</StyledBlueScore>
+                <StyledBlueTotalScore>7</StyledBlueTotalScore>
+            </StyledBlueScoreWrapper>
+            <StyledId>
+                <p>{id}</p>
+            </StyledId>
+            <StyledRedScoreWrapper>
+                <StyledRedScore>{redScore}</StyledRedScore>
+                <StyledRedTotalScore>7</StyledRedTotalScore>
+            </StyledRedScoreWrapper>
+
             { finished && <div>Winner : {winner} Team</div>}
-
-            {((currentPlayer.role === 'BS' && turn === 'BS') || (currentPlayer.role === 'RS' && turn === 'RS')) && (
-                <StyledSpyTurn>
-                <Input onChange={handleChange}>{wordUsed}</Input>
-                <StyledButtonWrapper>
-                {nrbButton}
-                </StyledButtonWrapper>
-                </StyledSpyTurn>
+            <StyledContainer>
+                {((currentPlayer.role === 'BS' && turn === 'BS') || (currentPlayer.role === 'RS' && turn === 'RS')) && (
+                    <StyledSpyTurn>
+                        <StyledLabel htmlFor="">Tips word :</StyledLabel>
+                        <Input onChange={handleChange}>{wordUsed}</Input>
+                        <StyledButtonWrapper>
+                        {nrbButton}
+                        </StyledButtonWrapper>
+                    </StyledSpyTurn>
                 )}
 
-            {/* Agent turn */}
-            {((turn === 'BA' && currentPlayer.role === 'BA') || (turn === 'RA' && currentPlayer.role === 'RA')) &&(
-                <div>
-                <p>{wordUsed}</p>
-                <p>{numberWord}</p>
-
-                {cardsSelected.map((card) => (
-                    <p>{card.word}</p>
-                ))}
-
-                <Button onClick={nextTurn} text='Valider' />
-                </div>
+                {/* Agent turn */}
+                {((turn === 'BA' && currentPlayer.role === 'BA') || (turn === 'RA' && currentPlayer.role === 'RA')) &&(
+                    <StyledTip>
+                        <div>
+                            <StyledValidationButton onClick={nextTurn} text='Valider' />
+                            <StyledTextTip>"{wordUsed}"</StyledTextTip>
+                            <StyledTextTip>{numberWord} cartes</StyledTextTip>
+                        </div>
+                    </StyledTip>
                 )}
-
+            </StyledContainer>
             {/* Next team */}
 
                 <Board data={board} player={currentPlayer} socket={socket} turn={turn}/>
