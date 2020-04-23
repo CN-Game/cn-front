@@ -19,6 +19,7 @@ import {
     StyledTip,
     StyledTextTip,
     StyledValidationButton,
+    StyledTurnTitle,
 } from './styled';
 
 const Game = function (props) {
@@ -34,6 +35,7 @@ const Game = function (props) {
     const [redScore, setRedScore] = useState(0);
     const [finished, setFinished] = useState(false);
     const [winner, setWinner] = useState('');
+    const [roundTitle, setRoundTitle] = useState(false)
 
     const { id } = useParams();
 
@@ -52,8 +54,28 @@ const Game = function (props) {
         }
     };
 
-    const nrbButton = [];
+    const _title = (turn, role) => {
+        if (turn !== role) {
+            switch (turn) {
+                case 'BS':
+                    setRoundTitle("L'espion bleu réfléchit");
+                    break;
+                case 'RS':
+                    setRoundTitle("L'espion rouge réfléchit");
+                    break;
+                case 'BA':
+                    setRoundTitle("L'agent bleu réfléchit");
+                    break;
+                case 'RA':
+                    setRoundTitle("L'agent rouge réfléchit");
+                    break;
+            }
+        } else {
+            setRoundTitle(false);
+        }
+    };
 
+    const nrbButton = [];
     for (let i = 1; i <= cardRemain; i++) {
         nrbButton.push(<StyledNumberButton key={i} text={i} onClick={() => nextTurn(i)} />);
     }
@@ -63,19 +85,23 @@ const Game = function (props) {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/games/${id}`);
             res.data.players.forEach(player => {
                 if(player.socketId === socket.id) {
-                    setCurrentPlayer(player)
+                    setCurrentPlayer(player);
                     switch (player.role) {
                         case 'BS':
                             setToNextTurn('BA');
+                            _title(res.data.turn, player.role);
                             break;
                         case 'RS':
                             setToNextTurn('RA');
+                            _title(res.data.turn, player.role);
                             break;
                         case 'BA':
                             setToNextTurn('RS');
+                            _title(res.data.turn, player.role);
                             break;
                         case 'RA':
                             setToNextTurn('BS');
+                            _title(res.data.turn, player.role);
                             break;
                     }
                 }
@@ -118,6 +144,7 @@ const Game = function (props) {
 
             { finished && <div>Winner : {winner} Team</div>}
             <StyledContainer>
+                { roundTitle && <StyledTurnTitle>{roundTitle}</StyledTurnTitle> }
                 {((currentPlayer.role === 'BS' && turn === 'BS') || (currentPlayer.role === 'RS' && turn === 'RS')) && (
                     <StyledSpyTurn>
                         <StyledLabel htmlFor="">Tips word :</StyledLabel>

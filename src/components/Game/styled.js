@@ -5,6 +5,7 @@ import { color } from "../../utils/branding";
 export const StyledContainer = styled.div`
   height: 150px;
   margin-bottom: 12px;
+  position: relative;
 `;
 
 export const StyledSpyTurn = styled('section')`
@@ -125,6 +126,16 @@ export const StyledTextTip = styled.p`
 export const StyledValidationButton = styled(Button)`
   display: block;
   flex: 0 0 auto;
+`;
+
+export const StyledTurnTitle = styled.p`
+  text-align: center;
+  vertical-align: middle;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 28px;
 `;
 
 export default {
