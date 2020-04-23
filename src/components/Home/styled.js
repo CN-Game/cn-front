@@ -28,7 +28,7 @@ export const StyledActionContainer = styled.div`
   align-items: center;
   margin-top: 120px;
   
-  div {
+  > div {
     width: 33%;
   }  
 `;

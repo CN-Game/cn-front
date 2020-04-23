@@ -1,13 +1,17 @@
 import React from 'react';
-import { StyledInput } from './styled';
+import { StyledInput, StyledInputWrapper, StyledError } from './styled';
 
 const Input = ({
   onChange,
   onKeyUp,
   value,
+  error
 }) => {
   return (
-    <StyledInput onChange={onChange} onKeyUp={onKeyUp} value={value} name="id" type="text"/>
+      <StyledInputWrapper>
+        <StyledInput onChange={onChange} onKeyUp={onKeyUp} value={value} name="id" type="text"/>
+        { error && <StyledError>{error.data}</StyledError>}
+      </StyledInputWrapper>
   )
 };
 

@@ -18,10 +18,14 @@ import { color } from '../../utils/branding';
 const Home = () => {
 
   const [idGame, setIdGame] = useState('');
+  const [error, setError] = useState(null);
   const history = useHistory();
+  const regex = /^[0-9]+$/;
 
   const handleChangeId = async (e) => {
-    setIdGame(e.target.value)
+    if((regex.test(e.target.value) && e.target.value.length <= 6) || e.target.value.length === 0){
+      setIdGame(e.target.value)
+    }
   };
 
   const createGame = async () => {
@@ -30,8 +34,18 @@ const Home = () => {
     history.push(`/waiting-room/${res.data.gameId}`)
   };
 
-  const joinGame = () => {
-    history.push(`/waiting-room/${idGame}`)
+  const joinGame = async () => {
+    if (idGame.length === 6) {
+      await axios.get(`${process.env.REACT_APP_API_URL}/games/${idGame}`).then(response => {
+        console.log(response);
+      }).catch(error => {
+        setError(error.response);
+        console.log(error.response);
+      });
+    } else {
+      setError({data: "Need length of 6 number"})
+    }
+    // history.push(`/waiting-room/${idGame}`)
   };
 
   const enterPress = (e) => {
@@ -57,7 +71,7 @@ const Home = () => {
         <StyledActionContainer>
           <StyledJoinGame>
             <label htmlFor='id'>Game ID</label>
-            <Input onChange={handleChangeId} onKeyUp={enterPress} value={idGame} name="id" type="text"/>
+            <Input onChange={handleChangeId} onKeyUp={enterPress} value={idGame} name="id" type="text" error={error}/>
             <Button onClick={joinGame} text={'Join Game'} />
           </StyledJoinGame>
           <StyledCreateButton>
