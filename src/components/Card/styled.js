@@ -3,8 +3,14 @@ import styled from "styled-components";
 export const StyledCardItem = styled.div`
 ${ ({reveal, color, realColor, discovered}) => reveal || discovered ? `
     background-color: ${realColor};
+    ${discovered ? `
+      text-decoration: line-through;
+      text-decoration-color: black;
+      text-decoration-style: wavy;
+      opacity: 0.2;
+    `: ''}
     color: #FFF;
-     box-shadow: 9px 9px 16px #BFBFBF, -9px -9px 16px #FFFFFF;
+    box-shadow: 9px 9px 16px #BFBFBF, -9px -9px 16px #FFFFFF;
   `
     :`
     background-color: ${color};
