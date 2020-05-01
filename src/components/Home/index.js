@@ -43,9 +43,9 @@ const Home = () => {
         console.log(error.response);
       });
     } else {
-      setError({data: "Need length of 6 number"})
+      setError({data: "Un ID est composé de 6 chiffres"})
     }
-    // history.push(`/waiting-room/${idGame}`)
+    history.push(`/waiting-room/${idGame}`)
   };
 
   const enterPress = (e) => {
@@ -62,7 +62,7 @@ const Home = () => {
             <StyledTopText>
               <h1>Code Names</h1>
               <p>
-                New way to play <code>CODE NAMES</code> with your friends.
+                Une nouvelle façon de jouer à <code>CODE NAMES</code> avec vos amis.
               </p>
             </StyledTopText>
           </StyledTopCard>
@@ -72,10 +72,10 @@ const Home = () => {
           <StyledJoinGame>
             <label htmlFor='id'>Game ID</label>
             <Input onChange={handleChangeId} onKeyUp={enterPress} value={idGame} name="id" type="text" error={error}/>
-            <Button onClick={joinGame} text={'Join Game'} />
+            <Button onClick={joinGame} text={'Rejoindre'} />
           </StyledJoinGame>
           <StyledCreateButton>
-            <Button onClick={createGame} text={'Create Game'} />
+            <Button onClick={createGame} text={'Créer partie'} />
           </StyledCreateButton>
         </StyledActionContainer>
 

@@ -17,6 +17,9 @@ const Routing = () => {
             <WaitingRoom />
           </Route>
           <Route path="/game/:id" component={Game} />
+          <Route path="*">
+            {/*<404 component />*/}
+          </Route>
         </Switch>
       </Router>
     </>

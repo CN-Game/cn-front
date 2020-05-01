@@ -35,7 +35,7 @@ const Game = function (props) {
     const [redScore, setRedScore] = useState(0);
     const [finished, setFinished] = useState(false);
     const [winner, setWinner] = useState('');
-    const [roundTitle, setRoundTitle] = useState(false)
+    const [roundTitle, setRoundTitle] = useState(false);
 
     const { id } = useParams();
 
@@ -54,8 +54,8 @@ const Game = function (props) {
         }
     };
 
-    const _title = (turn, role) => {
-        if (turn !== role) {
+    const _title = (turn, role, isFinished) => {
+        if (turn !== role && !isFinished) {
             switch (turn) {
                 case 'BS':
                     setRoundTitle("L'espion bleu réfléchit");
@@ -86,22 +86,19 @@ const Game = function (props) {
             res.data.players.forEach(player => {
                 if(player.socketId === socket.id) {
                     setCurrentPlayer(player);
+                    _title(res.data.turn, player.role, res.data.finished);
                     switch (player.role) {
                         case 'BS':
                             setToNextTurn('BA');
-                            _title(res.data.turn, player.role);
                             break;
                         case 'RS':
                             setToNextTurn('RA');
-                            _title(res.data.turn, player.role);
                             break;
                         case 'BA':
                             setToNextTurn('RS');
-                            _title(res.data.turn, player.role);
                             break;
                         case 'RA':
                             setToNextTurn('BS');
-                            _title(res.data.turn, player.role);
                             break;
                     }
                 }
@@ -124,8 +121,10 @@ const Game = function (props) {
 
     }, [turn]);
 
-    const handleChange = (e) => {
-        setWordUsed(e.target.value);
+    const handleChangeTipWord = (e) => {
+        if (e.target.value.length <= 25) {
+            console.log(e.target.value.length <= 25)
+        }
     };
 
     return (
@@ -142,13 +141,13 @@ const Game = function (props) {
                 <StyledRedTotalScore>7</StyledRedTotalScore>
             </StyledRedScoreWrapper>
 
-            { finished && <div>Winner : {winner} Team</div>}
             <StyledContainer>
+                { finished && <StyledTurnTitle>Winner : {winner} Team</StyledTurnTitle>}
                 { roundTitle && <StyledTurnTitle>{roundTitle}</StyledTurnTitle> }
                 {((currentPlayer.role === 'BS' && turn === 'BS') || (currentPlayer.role === 'RS' && turn === 'RS')) && (
                     <StyledSpyTurn>
                         <StyledLabel htmlFor="">Tips word :</StyledLabel>
-                        <Input onChange={handleChange}>{wordUsed}</Input>
+                        <Input >{wordUsed}</Input>
                         <StyledButtonWrapper>
                         {nrbButton}
                         </StyledButtonWrapper>

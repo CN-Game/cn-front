@@ -24,6 +24,7 @@ const WaitingRoom = () => {
     const [selectTeam, setSelectTeam] = useState(false);
     const [currentPlayer, setCurrentPlayer] = useState({});
     const [socket, setSocket] = useState({});
+    const [error, setError] = useState(null);
     const history = useHistory();
 
     const { id } = useParams();
@@ -34,10 +35,23 @@ const WaitingRoom = () => {
     }, []);
 
     const handleChange = (e) => {
-        setPseudo(e.target.value)
+        if (e.target.value.length <= 15) {
+            setPseudo(e.target.value)
+        }
+    };
+
+    const enterPress = (e) => {
+        const key = e.keyCode || e.which;
+        if (key === 13) (
+            handlePseudo()
+        )
     };
 
     const handlePseudo =  async () => {
+        if (pseudo.length === 0) {
+            setError({data: "Veuillez saisir un pseudo"});
+            return false;
+        }
         setSelectTeam(true);
 
         const update = async (socket) => {
@@ -63,12 +77,11 @@ const WaitingRoom = () => {
 
         socket.on('GO_TO_GAME', function () {
             launchGame();
-            setPlayers([{pseudo: 'bidule'}])
         });
     };
 
     const handleChoiceTeam = (data) => {
-        setCurrentPlayer({socketId : socket.id, role : data.role, team: data.team});
+        setCurrentPlayer({socketId: socket.id, role: data.role, team: data.team});
         socket.emit('Choose team', data);
     };
 
@@ -87,7 +100,7 @@ const WaitingRoom = () => {
                 <TeamCard
                     team={"Blue"}
                     onClickSpy={() => handleChoiceTeam( { role: 'BS', team: 'blue' })}
-                    onClickAgent={() => handleChoiceTeam({role: 'BA', team: 'blue'})}
+                    onClickAgent={() => handleChoiceTeam({ role: 'BA', team: 'blue' })}
                     players={players.filter(player => player.team === "blue")}
                 />
                 <StyledCenterColumn>
@@ -98,7 +111,14 @@ const WaitingRoom = () => {
                     {!selectTeam ? (
                         <StyledChoosePseudo>
                             <label htmlFor='pseudo'>Peudo</label>
-                            <Input onChange={handleChange} value={pseudo} name="pseudo" type="text" />
+                            <Input
+                                onChange={handleChange}
+                                onKeyUp={enterPress}
+                                value={pseudo}
+                                name="pseudo"
+                                type="text"
+                                error={error}
+                            />
                             <Button onClick={handlePseudo} text={'Use this pseudo'} />
                         </StyledChoosePseudo>
                     ) : (
@@ -119,7 +139,7 @@ const WaitingRoom = () => {
                 <TeamCard
                     team={"Red"}
                     onClickSpy={() => handleChoiceTeam( { role: 'RS', team: 'red' })}
-                    onClickAgent={() => handleChoiceTeam({role: 'RA', team: 'red'})}
+                    onClickAgent={() => handleChoiceTeam({ role: 'RA', team: 'red' })}
                     players={players.filter(player => player.team === "red")}
                 />
             </WaitingRoomContainer>

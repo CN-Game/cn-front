@@ -126,6 +126,7 @@ export const StyledTextTip = styled.p`
 export const StyledValidationButton = styled(Button)`
   display: block;
   flex: 0 0 auto;
+  margin-top: 24px;
 `;
 
 export const StyledTurnTitle = styled.p`
