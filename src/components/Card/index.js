@@ -42,7 +42,7 @@ const Card = ({
           })
       )
     }
-  , [cardsSelected]);
+  , [cardsSelected, item]);
 
   return (
     <StyledCardItem

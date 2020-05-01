@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyledBoard } from './styled'
 import Card from '../../Card'
 
 class Board extends React.Component {
-    constructor(props){
-        super(props);
-    }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         this.reveal = this.props.player.role === 'BS' || this.props.player.role === 'RS';

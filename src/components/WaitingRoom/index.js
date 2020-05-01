@@ -32,7 +32,7 @@ const WaitingRoom = () => {
     useEffect(() => {
         setSocket(io(process.env.REACT_APP_SOCKET_URL, {query: 'room=' + id}));
 
-    }, []);
+    }, [id]);
 
     const handleChange = (e) => {
         if (e.target.value.length <= 15) {
