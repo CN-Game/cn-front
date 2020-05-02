@@ -24,8 +24,10 @@ import {
 
 const Game = function (props) {
 
+    const { id } = useParams();
+
     const [board, setBoard] = useState([]);
-    const [socket, setSocket] = useState(props.location.state.socket || {});
+    const [socket] = useState(props.location.state.socket || {});
     const [currentPlayer, setCurrentPlayer] = useState({});
     const [turn, setTurn] = useState('');
     const [wordUsed, setWordUsed] = useState();
@@ -36,8 +38,6 @@ const Game = function (props) {
     const [finished, setFinished] = useState(false);
     const [winner, setWinner] = useState('');
     const [roundTitle, setRoundTitle] = useState(false);
-
-    const { id } = useParams();
 
     let cardRemain = 7; // TODO: get data from server
 
@@ -50,6 +50,8 @@ const Game = function (props) {
             case 'BA':
             case 'RA':
                 socket.emit('NEXT_TURN', {toNextTurn});
+                break;
+            default:
                 break;
         }
     };
@@ -68,6 +70,8 @@ const Game = function (props) {
                     break;
                 case 'RA':
                     setRoundTitle("L'agent rouge réfléchit");
+                    break;
+                default:
                     break;
             }
         } else {
@@ -100,6 +104,8 @@ const Game = function (props) {
                         case 'RA':
                             setToNextTurn('BS');
                             break;
+                        default:
+                            break;
                     }
                 }
             });
@@ -109,6 +115,10 @@ const Game = function (props) {
             setRedScore(res.data.redScore);
             setTurn(res.data.turn);
             setBoard(res.data.board);
+            if (res.data.tip) {
+                setWordUsed(res.data.tip.wordUsed);
+                setNumberWord(res.data.tip.number);
+            }
         }
 
         getGame();
@@ -119,11 +129,11 @@ const Game = function (props) {
             setNumberWord(data.number);
         });
 
-    }, [turn]);
+    }, [turn, socket, id]);
 
     const handleChangeTipWord = (e) => {
         if (e.target.value.length <= 25) {
-            console.log(e.target.value.length <= 25)
+            setWordUsed(e.target.value);
         }
     };
 
@@ -144,18 +154,20 @@ const Game = function (props) {
             <StyledContainer>
                 { finished && <StyledTurnTitle>Winner : {winner} Team</StyledTurnTitle>}
                 { roundTitle && <StyledTurnTitle>{roundTitle}</StyledTurnTitle> }
-                {((currentPlayer.role === 'BS' && turn === 'BS') || (currentPlayer.role === 'RS' && turn === 'RS')) && (
+                { !finished && (
+                    ((currentPlayer.role === 'BS' && turn === 'BS') || (currentPlayer.role === 'RS' && turn === 'RS')) && (
                     <StyledSpyTurn>
                         <StyledLabel htmlFor="">Tips word :</StyledLabel>
-                        <Input >{wordUsed}</Input>
+                        <Input onChange={handleChangeTipWord}>{wordUsed}</Input>
                         <StyledButtonWrapper>
                         {nrbButton}
                         </StyledButtonWrapper>
                     </StyledSpyTurn>
-                )}
+                ))}
 
                 {/* Agent turn */}
-                {((turn === 'BA' && currentPlayer.role === 'BA') || (turn === 'RA' && currentPlayer.role === 'RA')) &&(
+                { !finished && (
+                    ((turn === 'BA' && currentPlayer.role === 'BA') || (turn === 'RA' && currentPlayer.role === 'RA')) &&(
                     <StyledTip>
                         <div>
                             <StyledValidationButton onClick={nextTurn} text='Valider' />
@@ -163,7 +175,7 @@ const Game = function (props) {
                             <StyledTextTip>{numberWord} cartes</StyledTextTip>
                         </div>
                     </StyledTip>
-                )}
+                ))}
             </StyledContainer>
             {/* Next team */}
 

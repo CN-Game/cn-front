@@ -7,7 +7,7 @@ ${ ({reveal, color, realColor, discovered}) => reveal || discovered ? `
       text-decoration: line-through;
       text-decoration-color: black;
       text-decoration-style: wavy;
-      opacity: 0.2;
+      // opacity: 0.8;
     `: ''}
     color: #FFF;
     box-shadow: 9px 9px 16px #BFBFBF, -9px -9px 16px #FFFFFF;
