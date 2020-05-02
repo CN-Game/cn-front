@@ -17,7 +17,7 @@ const TeamCard = ({
           <StyledPseudoWrapper>
             {players.map( player => (
               (player.role === "BS" || player.role === "RS") &&
-              <StyledPseudo>{player.pseudo}</StyledPseudo>
+              <StyledPseudo key={player._id}>{player.pseudo}</StyledPseudo>
             ))}
           </StyledPseudoWrapper>
       </StyledTeamContainer>
@@ -27,7 +27,7 @@ const TeamCard = ({
           <StyledPseudoWrapper>
             {players.map( player => (
               (player.role === "BA" || player.role === "RA") &&
-              <StyledPseudo>{player.pseudo}</StyledPseudo>
+              <StyledPseudo key={player._id}>{player.pseudo}</StyledPseudo>
             ))}
           </StyledPseudoWrapper>
       </StyledTeamContainer>

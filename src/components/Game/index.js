@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
 import Board from "./Board";
 import Input from '../Input';
@@ -22,12 +23,11 @@ import {
     StyledTurnTitle,
 } from './styled';
 
-const Game = function (props) {
+const Game = function ({ socket }) {
 
     const { id } = useParams();
 
     const [board, setBoard] = useState([]);
-    const [socket] = useState(props.location.state.socket || {});
     const [currentPlayer, setCurrentPlayer] = useState({});
     const [turn, setTurn] = useState('');
     const [wordUsed, setWordUsed] = useState();
@@ -185,4 +185,8 @@ const Game = function (props) {
 
 };
 
-export default Game
+const mapStateToProps = state => {
+    return { socket: state.socket }
+};
+
+export default connect(mapStateToProps, null)(Game);
