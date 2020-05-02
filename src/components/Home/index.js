@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
 import axios from 'axios';
 import Button from '../Button';
 import Input from '../Input';
@@ -15,12 +16,18 @@ import {
 } from './styled';
 import { color } from '../../utils/branding';
 
-const Home = () => {
+const Home = ({ socket }) => {
 
   const [idGame, setIdGame] = useState('');
   const [error, setError] = useState(null);
   const history = useHistory();
   const regex = /^[0-9]+$/;
+
+  useEffect( () => {
+    if (Object.keys(socket).length) {
+      socket.disconnect()
+    }
+  }, [socket]);
 
   const handleChangeId = async (e) => {
     if((regex.test(e.target.value) && e.target.value.length <= 6) || e.target.value.length === 0){
@@ -83,4 +90,8 @@ const Home = () => {
     )
 };
 
-export default Home;
+const mapStateToProps = state => {
+  return { socket: state.socket };
+};
+
+export default connect(mapStateToProps, null)(Home);

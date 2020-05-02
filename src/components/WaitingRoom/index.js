@@ -66,9 +66,9 @@ const WaitingRoom = ({ setSocket, socket }) => {
 
         socket.emit('New user connected');
 
-        socket.on('user_leave', function (data) {
-            console.log(data.user_name + 'left the game')
-        });
+        // socket.on('user_leave', function (data) {
+        //     console.log(data.user_name + 'left the game')
+        // });
 
         socket.on('UPDATE_CLIENT', async (data) => {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/games/${id}`)
