@@ -152,8 +152,16 @@ const Game = function ({ socket }) {
             </StyledRedScoreWrapper>
 
             <StyledContainer>
-                { finished && <StyledTurnTitle>Winner : {winner} Team</StyledTurnTitle>}
-                { roundTitle && <StyledTurnTitle>{roundTitle}</StyledTurnTitle> }
+                { finished && (
+                    <StyledTurnTitle>Winner : {winner} Team</StyledTurnTitle>
+                )}
+                { roundTitle && (
+                    <StyledTip>
+                        <StyledTextTip>"{wordUsed}" - </StyledTextTip>
+                        <StyledTextTip>- {numberWord} cartes</StyledTextTip>
+                        <StyledTurnTitle>{roundTitle}</StyledTurnTitle>
+                    </StyledTip>
+                )}
                 { !finished && (
                     ((currentPlayer.role === 'BS' && turn === 'BS') || (currentPlayer.role === 'RS' && turn === 'RS')) && (
                     <StyledSpyTurn>

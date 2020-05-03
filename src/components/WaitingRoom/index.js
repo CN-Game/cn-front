@@ -108,7 +108,7 @@ const WaitingRoom = ({ setSocket, socket }) => {
 
                     {!selectTeam ? (
                         <StyledChoosePseudo>
-                            <label htmlFor='pseudo'>Peudo</label>
+                            <label htmlFor='pseudo'>Pseudo</label>
                             <Input
                                 onChange={handleChange}
                                 onKeyUp={enterPress}
